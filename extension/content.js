@@ -95,7 +95,6 @@ async function initTwitchVodMiner(){
 
     function setChannelPointsClickerListeners(channelPointsClickerInterval) {
         if (!channelPointsClickerInterval) {
-            console.log('yes')
             clickChannelPointsBtn();
             channelPointsClickerInterval = setInterval(function() {
                 clickChannelPointsBtn();
@@ -266,7 +265,7 @@ async function initTwitchVodMiner(){
                 transition: all 111ms;
             }
             .${style_id}:hover {
-                box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 6px 0px, rgba(255, 255, 255, 0.8) -6px -2px 6px -3px;
+                box-shadow: rgba(0, 0, 0, 0.8) 6px 2px 6px 0px, rgba(0, 0, 0, 0.8) -6px -2px 6px -3px;
                 color: #788fa5;
             }
             .${style_id}:active {
@@ -309,7 +308,7 @@ async function initTwitchVodMiner(){
         const cont = ele('div');
         a(cont,[['class','main_info_card']]);
 
-        inlineStyler(cont,`{display: grid; grid-template-columns: 582px; text-align: center; height: ${height}px; max-width: ${width}px; background: #495466; color: #000000; border-radius: 1em; padding: 12px; transition: all 111ms; position: fixed; z-index: ${topZIndexer()};}`);
+        inlineStyler(cont,`{display: grid; grid-template-columns: 582px; text-align: center; height: ${height}px; max-width: ${width}px; background: #495466; color: #ffffff; border-radius: 1em; padding: 12px; transition: all 111ms; position: fixed; z-index: ${topZIndexer()};}`);
         document.body.appendChild(cont);
 
         const left = ele('div');
@@ -335,21 +334,25 @@ async function initTwitchVodMiner(){
         left.appendChild(chat_msg_cont);
 
         var chat_msg = ele('input');
-        a(chat_msg,[['id','message_body'],['placeholder','Keyword in chat'],['class','textarea pad12']]);
+        a(chat_msg,[['id','message_body'],['placeholder','Keyword in chat'],['class','textarea pad12'],['style','background-color:#3d4655']]);
         chat_msg.style.width='80%';
         chat_msg_cont.appendChild(chat_msg);
         chat_msg.onkeyup = (e)=> {
-            console.log(e.key)
             if(e.key == "Enter"){
                 initChatLogSearch();
             }
         };
         var match = ele('button');
-        a(match,[['id','match'],['class','pad12'],['style','border-radius:5px;border:2px solid black;'],['alt', 'Match whole word'],["title","Match whole word"]]);
+        a(match,[['id','match'],['class','pad12'],['style','border-radius:5px;border:1px solid #808080;'],['alt', 'Match whole word'],["title","Match whole word"]]);
         match.innerHTML='&#x1F3AB;';
         chat_msg_cont.appendChild(match);
         match.onclick = function() {
-            match_whole = true;
+            match_whole = !match_whole;
+            if(match_whole){
+                a(match,[['id','match'],['class','pad12'],['style','background-color:#242931;border-radius:5px;border:1px solid #808080;'],['alt', 'Match whole word'],["title","Match whole word"]]);
+            }else{
+                a(match,[['id','match'],['class','pad12'],['style','border-radius:5px;border:1px solid #808080;'],['alt', 'Match whole word'],["title","Match whole word"]]);
+            }
         }
         const btn = ele('div');
         a(btn,[['id','search_btn'],['class','search_logs_btn_main centertext pad8']]);
@@ -659,7 +662,7 @@ async function initTwitchVodMiner(){
             a(views,[['class','hh4']]);
             download_btn_cont.appendChild(views);
             views.innerText ='Video has '+`${vod_info.views.toLocaleString()}`+' views';
-            inlineStyler(gi(document,'main_card'),`{grid-template-rows: 5px 295px 50px 50px 40px;}`);
+            inlineStyler(gi(document,'main_card'),`{grid-template-rows: 15px 295px 50px 50px 40px;}`);
         }else{
             if(document.getElementById('injectVODsearchBtnIntoHeader')) document.getElementById('injectVODsearchBtnIntoHeader').outerHTML = '';
         }
@@ -813,7 +816,7 @@ async function initTwitchVodMiner(){
         function buildLineChart(rawdata,key,rounder){
             if(document.getElementById('linechart_container')) document.getElementById('linechart_container').outerHTML = '';
             const data = buildTimelineAnalysis(rawdata,key,rounder);
-            console.log(rawdata)
+            //console.log(rawdata)
             const ele = (t) => document.createElement(t);
             const attr = (o, k, v) => o.setAttribute(k, v);
             const a = (l, r) => r.forEach(a => attr(l, a[0], a[1]));
@@ -905,7 +908,7 @@ async function initTwitchVodMiner(){
                 inlineStyler(linechart_data_cont,`{display:grid; grid-template-columns:${Array(data?.seconds_counted.length).fill().map((_,i)=> ' '+data?.data_to_container_pixel_differential_width+'px').reduce((a,b)=> a+b)}; width:100%; background-color: #ffffff; opacity: 0.9; background-image: radial-gradient(#9294b6 0.35000000000000003px, #ffffff 0.35000000000000003px); background-size: 7px 7px;}`);
                 center.appendChild(linechart_data_cont);
                 // Array(data.given_container_width).fill().map((_,i)=> i++)
-                console.log(data?.data_to_container_pixel_differential_width);
+                //console.log(data?.data_to_container_pixel_differential_width);
                 // var calculatRadiusTransition = (dd,ii,rr)=> 
                 data?.seconds_counted.forEach((d,i,r)=> {
                     // 
