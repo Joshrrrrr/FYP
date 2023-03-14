@@ -216,64 +216,47 @@ app.get('/examples', (req, res) => {
 app.post('/submit', (req, res) => {
   const search = req.body.userSearch;
   const searchType = req.body.searchType;
+  wholeword=true;
   console.log(req.body)
   results = [];
   // Perform database query or any other necessary processing here
   // and pass the results to the 'results' view as an array of objects
-  if(searchType == "searchTerm"){
-    pool.getConnection()
-  .then(conn => {
-      conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
-          .then((rows) => {
-              //const channels = rows.map(({ channel, count }) => ({ channel, count }));
-              results.push(rows);
-              conn.end();
-              sendResults = results[0];
-              if (req.session && req.session.passport && req.session.passport.user) {
-                display_name = req.session.passport.user.data[0].display_name;
-                res.render('results', { display_name, sendResults, search, searchType });
-              }else{
-                display_name = null;
-                res.render('results', { sendResults, search, searchType });
-              }
-          })
-          .catch(err => {
-              console.log("An error occurred: " + err);
-              conn.end();
-          });
-  })
-  .catch(err => {
-      console.log("An error occurred: " + err);
-  });
-  } else if(searchType == "Channel"){
-    pool.getConnection()
-  .then(conn => {
-      conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
-          .then((rows) => {
-              //const channels = rows.map(({ channel, count }) => ({ channel, count }));
-              results.push(rows);
-              conn.end();
-              sendResults = results[0];
-              if (req.session && req.session.passport && req.session.passport.user) {
-                display_name = req.session.passport.user.data[0].display_name;
-                res.render('results', { display_name, sendResults, search, searchType });
-              }else{
-                display_name = null;
-                res.render('results', { sendResults, search, searchType });
-              }
-          })
-          .catch(err => {
-              console.log("An error occurred: " + err);
-              conn.end();
-          });
-  })
-  .catch(err => {
-      console.log("An error occurred: " + err);
-  });
-  }else if(searchType == "User"){
-    pool.getConnection()
+  if(wholeword){
+    if(searchType == "searchTerm"){
+      pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
+            .then((rows) => {
+                //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                results.push(rows);
+                conn.end();
+                sendResults = results[0];
+                logs = sendResults[0].searchResults;
+                const regex = new RegExp(`\\b${search}\\b`, 'i');
+                const filteredMessages  = logs.filter((message) => {
+                  return regex.test(message.message_body);
+                });
+                console.log(filteredMessages)
+                if (req.session && req.session.passport && req.session.passport.user) {
+                  display_name = req.session.passport.user.data[0].display_name;
+                  res.render('results', { display_name, sendResults, search, searchType });
+                }else{
+                  display_name = null;
+                  res.render('results', { sendResults, search, searchType });
+                }
+            })
+            .catch(err => {
+                console.log("An error occurred: " + err);
+                conn.end();
+            });
+    })
+    .catch(err => {
+        console.log("An error occurred: " + err);
+    });
+    } else if(searchType == "Channel"){
+      pool.getConnection()
+    .then(conn => {
+        conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -295,7 +278,111 @@ app.post('/submit', (req, res) => {
     .catch(err => {
         console.log("An error occurred: " + err);
     });
+    }else if(searchType == "User"){
+      pool.getConnection()
+      .then(conn => {
+          conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+              .then((rows) => {
+                  //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                  results.push(rows);
+                  conn.end();
+                  sendResults = results[0];
+                  if (req.session && req.session.passport && req.session.passport.user) {
+                    display_name = req.session.passport.user.data[0].display_name;
+                    res.render('results', { display_name, sendResults, search, searchType });
+                  }else{
+                    display_name = null;
+                    res.render('results', { sendResults, search, searchType });
+                  }
+              })
+              .catch(err => {
+                  console.log("An error occurred: " + err);
+                  conn.end();
+              });
+      })
+      .catch(err => {
+          console.log("An error occurred: " + err);
+      });
+    }
+  }else{
+    if(searchType == "searchTerm"){
+      pool.getConnection()
+    .then(conn => {
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
+            .then((rows) => {
+                //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                results.push(rows);
+                conn.end();
+                sendResults = results[0];
+                if (req.session && req.session.passport && req.session.passport.user) {
+                  display_name = req.session.passport.user.data[0].display_name;
+                  res.render('results', { display_name, sendResults, search, searchType });
+                }else{
+                  display_name = null;
+                  res.render('results', { sendResults, search, searchType });
+                }
+            })
+            .catch(err => {
+                console.log("An error occurred: " + err);
+                conn.end();
+            });
+    })
+    .catch(err => {
+        console.log("An error occurred: " + err);
+    });
+    } else if(searchType == "Channel"){
+      pool.getConnection()
+    .then(conn => {
+        conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
+            .then((rows) => {
+                //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                results.push(rows);
+                conn.end();
+                sendResults = results[0];
+                if (req.session && req.session.passport && req.session.passport.user) {
+                  display_name = req.session.passport.user.data[0].display_name;
+                  res.render('results', { display_name, sendResults, search, searchType });
+                }else{
+                  display_name = null;
+                  res.render('results', { sendResults, search, searchType });
+                }
+            })
+            .catch(err => {
+                console.log("An error occurred: " + err);
+                conn.end();
+            });
+    })
+    .catch(err => {
+        console.log("An error occurred: " + err);
+    });
+    }else if(searchType == "User"){
+      pool.getConnection()
+      .then(conn => {
+          conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+              .then((rows) => {
+                  //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                  results.push(rows);
+                  conn.end();
+                  sendResults = results[0];
+                  if (req.session && req.session.passport && req.session.passport.user) {
+                    display_name = req.session.passport.user.data[0].display_name;
+                    res.render('results', { display_name, sendResults, search, searchType });
+                  }else{
+                    display_name = null;
+                    res.render('results', { sendResults, search, searchType });
+                  }
+              })
+              .catch(err => {
+                  console.log("An error occurred: " + err);
+                  conn.end();
+              });
+      })
+      .catch(err => {
+          console.log("An error occurred: " + err);
+      });
+    }
   }
+
   //results.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
 });
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitch Features</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <div class="popup">
+      <img src="search-icon.png" alt="Search Icon">
+      <h1>Twitch Feature</h1>
+      <button id="login-btn">Login with Twitch</button>
+      <h3 id="status-text"></h3>
+      <button id="logout-btn">Logout</button>
+    </div>
+    <div class="center">
+      <label>
+        Auto Refresh player on errors:
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="refresh-toggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="center">
+      <label>
+        Auto Channel Points Clicker:
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="clicker-toggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="center">
+      <button id="site-btn">Website</button>
+      <button id="rate-btn">Rate me</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
