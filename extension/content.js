@@ -1,5 +1,6 @@
 let isFirefox = typeof browser !== "undefined";
 let _browser = isFirefox ? browser : chrome;
+let match_whole=false;
 
 async function initTwitchVodMiner(){
     async function requestFromBackground(obj){
@@ -335,7 +336,7 @@ async function initTwitchVodMiner(){
 
         var chat_msg = ele('input');
         a(chat_msg,[['id','message_body'],['placeholder','Keyword in chat'],['class','textarea pad12']]);
-        chat_msg.style.width='90%';
+        chat_msg.style.width='80%';
         chat_msg_cont.appendChild(chat_msg);
         chat_msg.onkeyup = (e)=> {
             console.log(e.key)
@@ -343,7 +344,13 @@ async function initTwitchVodMiner(){
                 initChatLogSearch();
             }
         };
-
+        var match = ele('button');
+        a(match,[['id','match'],['class','pad12'],['style','border-radius:5px;border:2px solid black;'],['alt', 'Match whole word'],["title","Match whole word"]]);
+        match.innerHTML='&#x1F3AB;';
+        chat_msg_cont.appendChild(match);
+        match.onclick = function() {
+            match_whole = true;
+        }
         const btn = ele('div');
         a(btn,[['id','search_btn'],['class','search_logs_btn_main centertext pad8']]);
         left.appendChild(btn);
@@ -443,6 +450,7 @@ async function initTwitchVodMiner(){
         keepElmInBoundary(cont);
     }
     function initChatLogSearch(){
+        var match_whole = true;
         var search_type = 'every';
         //THIS IS ALL THE CHAT LOGS DOWNLOADED IN ONE ARRAY
         var unq_msgs = unqMultiKey(contain_arr.flat(),{},['commenter_name','message_body','content_offset_seconds'])
@@ -464,7 +472,7 @@ async function initTwitchVodMiner(){
             ].filter(i=> i.val),
             search_type: search_type,
         }
-        let filtered_chats = searchCommentsByKeysWithBool(unq_msgs,search);
+        let filtered_chats = searchCommentsByKeysWithBool(unq_msgs,search, match_whole);
         addSearchResultsToForm('results_main',filtered_chats,search);
         let date = new Date();
         var token_params = getTokensFromCookies();
@@ -490,13 +498,16 @@ async function initTwitchVodMiner(){
         }
     function searchCommentsByKeysWithBool(arr,search){
         if(search?.searches?.length){
-            arr.filter(r=> search.searches[search.search_type](sob=> sob.x_arr.every(x=> x.test(r[sob.key]))))
-            const regex = new RegExp(`\\b${search.searches[0].val}\\b`, 'i');
-            const filteredMessages  = arr.filter((message) => {
-                console.log(message)
-                return regex.test(message.message_body);
+            if(match_whole){
+                arr.filter(r=> search.searches[search.search_type](sob=> sob.x_arr.every(x=> x.test(r[sob.key]))))
+                const regex = new RegExp(`\\b${search.searches[0].val}\\b`, 'i');
+                return arr = arr.filter((message) => {
+                    return regex.test(message.message_body);
               });
-            return filteredMessages;
+            }else{
+                return arr.filter(r=> search.searches[search.search_type](sob=> sob.x_arr.every(x=> x.test(r[sob.key]))))
+            }
+
         }else{
             return [];
         }   
