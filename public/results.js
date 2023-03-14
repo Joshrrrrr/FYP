@@ -13,6 +13,21 @@ const h4text2 = document.getElementById('h4text2');
 const sliceItems = document.querySelectorAll('.slice');
 const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]');
 const form = document.getElementById("myForm");
+const submitBtn = document.querySelector('.search-icon-btn');
+submitBtn.addEventListener('click', validateForm);
+
+function validateForm(event) {
+  let isChecked = false;
+  searchTypeCheckboxes.forEach(function(checkbox) {
+    if (checkbox.checked) {
+      isChecked = true;
+    }
+  });
+  if (!isChecked) {
+    event.preventDefault(); // prevent form submission
+    alert('Please select at least one search type.');
+  }
+}
 
 searchTypeCheckboxes.forEach(checkbox => {
   checkbox.addEventListener('click', () => {
