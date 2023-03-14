@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Twitch Feature Suite</title>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+  </head>
+  <body>
+    <div class="head">
+      <header>
+        <% if (display_name) { %>
+          <button class="login-btn" id="profileButton"><%= display_name %></button>
+        <% } else { %>
+          <button class="login-btn" id="loginButton">Log in</button>
+        <% } %>
+        <button class="burger-menu">&#9776;</button>
+        <ul class="menu-options">
+          <li><a href="#" id="dark-mode-toggle">Dark mode</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/examples">Examples</a></li>
+        </ul>
+      </header>
+      <div class="search-container">
+        <button class="button" style="display: flex;align-items: center;letter-spacing: 4px; font-size: 21px;">
+          <img style="margin-right: 10px;" width="23" height="23"src="chrome.png" alt="Chrome icon">
+          Download for Chrome
+        </button>
+      </div>
+      <div class="search-container">
+        <div class="dropdown">
+          <button class="dropbtn">Change browser</button>
+          <div class="dropdown-content">
+            <ul>
+              <li><a href="#"><img width="14" height="14"src="chrome.png" alt="Chrome icon">  Google Chrome</a></li>
+              <li><a href="#"><img width="14" height="14"src="firefox.png" alt="firefox icon">  Mozilla Firefox</a></li>
+              <li><a href="#"><img width="14" height="14"src="opera.png" alt="opera icon">  Opera</a></li>
+              <li><a href="#"><img width="14" height="14"src="edge.png" alt="edge icon">  Microsoft Edge</a></li>
+            </ul>
+          </div>
+        </div>
+      </div><br><br>
+      <div class="search-container">
+        <img class="icon" src="/twitch.png"/>
+        <h1>twitch feature suite</h1>
+      </div>
+      <br>
+      <div class="search-container">
+        <h4 id="h4text1">Companion page for the Twitch features extension</h4>
+      </div>
+      <div class="search-container">
+        <h4 id="h4text2">Search the extension database by Twitch channel name</h4>
+      </div>
+      <br><br>
+      <form action="/submit" method="POST">
+        <div class="search-container">
+          <div class="filter-dropdown">
+            <button type="button" class="filter-button"><img width="25" height="25"src="filter.png" alt="Filter icon"></button>
+            <div class="filter-dropdown-content">
+              <ul>
+                <li><label for="match-whole-word">Match Whole Word</label>
+                  <input type="checkbox" id="match-whole-word">
+                </li>
+                <li><label style="border-bottom: 3px solid white; line-height: 1.5;">Search Type</label></li>
+                <li><label for="SearchTerm">Search Term</label>
+                  <input name="searchType" value="searchTerm" type="checkbox" id="SearchTerm" checked></li>
+                <li><label for="Channel">Channel</label>
+                  <input name="searchType" value="Channel" type="checkbox" id="Channel"></li>
+                <li><label for="User">User</label>
+                  <input name="searchType" value="User" type="checkbox" id="User"></li>
+              </ul>
+            </div>
+          </div>
+          <input type="text" class="search-bar" id= "userSearch" name="userSearch" required/>
+          <div class="form-group form-check">
+          </div>
+          <button type="submit" class="search-icon-btn">&#128269;</button>
+        </div>
+      </form>
+    </div>
+    <br><br>
+    <div class="lists-container">
+      <div class="list items-container">
+        <img class="icon-2" src="/just.png"/>
+        <h4>Terms Just Searched</h4>
+      </div>
+      <div class="list items-container">
+        <img class="icon-2" src="/pop.png"/>
+        <h4>Popular Channels</h4>
+      </div>
+    </div>
+    <br>
+    <div class="lists-container">
+      <div class="list items-container">
+        <ul>
+          <% just_searched.forEach(function(item) { %>
+            <li class="list_item"><%= item %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <div class="list items-container">
+        <ul>
+          <% popular.forEach(obj => { %>
+            <li class="list_item"><a href="https://twitch.tv/<%= obj.channel %>"><%= obj.channel %>:</a> <%= obj.count %></li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/auth.js"></script>
+  </body>
+</html>

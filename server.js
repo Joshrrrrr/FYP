@@ -1,0 +1,303 @@
+const express = require('express');
+var session        = require('express-session');
+var passport       = require('passport');
+var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+var request        = require('request');
+const mariadb = require('mariadb');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+// Define our constants
+const TWITCH_CLIENT_ID = 'jfzv7avfgwhd0oebjb8b2qr3bf6z5i';
+const TWITCH_SECRET    = '52k1vpbr4pu09421erk3uwf916w2kk';
+const SESSION_SECRET   = '1234567890';
+const CALLBACK_URL     = 'http://localhost:3000/auth/twitch/callback';  // You can run locally with - http://localhost:3000/auth/twitch/callback
+let results =[];
+
+var corsOptions = {
+  origin: '*'
+}
+
+app.use(cors(corsOptions))
+app.use(express.json());
+app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.set('view engine', 'ejs');
+
+const pool = mariadb.createPool({
+  host: 'localhost',
+  user: 'josh',
+  password: 'josh',
+  database: 'fyp'
+});
+
+// Override passport profile function to get user profile from Twitch API
+OAuth2Strategy.prototype.userProfile = function(accessToken, done) {
+  var options = {
+    url: 'https://api.twitch.tv/helix/users',
+    method: 'GET',
+    headers: {
+      'Client-ID': TWITCH_CLIENT_ID,
+      'Accept': 'application/vnd.twitchtv.v5+json',
+      'Authorization': 'Bearer ' + accessToken
+    }
+  };
+
+  request(options, function (error, response, body) {
+    if (response && response.statusCode == 200) {
+      done(null, JSON.parse(body));
+    } else {
+      done(JSON.parse(body));
+    }
+  });
+}
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.use('twitch', new OAuth2Strategy({
+  authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
+  tokenURL: 'https://id.twitch.tv/oauth2/token',
+  clientID: TWITCH_CLIENT_ID,
+  clientSecret: TWITCH_SECRET,
+  callbackURL: CALLBACK_URL,
+  state: true
+},
+function(accessToken, refreshToken, profile, done) {
+  profile.accessToken = accessToken;
+  profile.refreshToken = refreshToken;
+
+  // Securely store user profile in your DB
+  //User.findOrCreate(..., function(err, user) {
+  //  done(err, user);
+  //});
+
+  done(null, profile);
+}
+));
+
+let just_searched = [];
+let pop_seach = [];
+let popular = [];
+
+app.post("/api", (req, res) => {
+  // Get the data from the request body
+  const channel = req.headers.channel;
+  const user = req.headers.user;
+  const timestamp = req.headers.timestamp;
+  const searchTerm = req.headers.searchterm;
+  const searchResults = JSON.stringify(req.body);
+
+  // Perform some logic or data processing here, such as querying a database
+  async function insertData() {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      var sql = 'INSERT INTO extension_searches (channel, user, timestamp, searchTerm, searchResults) VALUES (?, ?, ?, ?, ?)';
+      const res = await conn.query(sql, [channel, user, timestamp, searchTerm, searchResults]);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      if (conn) return conn.end();
+    }
+  }
+  insertData();
+
+  just_searched.push(searchTerm);
+  // Return a response to the client
+  res.json({
+    message: "The POST request was processed successfully!",
+    data: {
+      'Content-Type': 'application/json',
+      channel: channel,
+      user: user,
+      timestamp: timestamp,
+      searchTerm: searchTerm,
+      searchResults: searchResults
+    }
+  });
+  //searchResults.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
+});
+
+pool.getConnection()
+    .then(conn => {
+        conn.query('SELECT channel, COUNT(*) AS count FROM extension_searches GROUP BY channel')
+            .then((rows) => {
+                const channels = rows.map(({ channel, count }) => ({ channel, count }));
+
+                //HANDLING BIGINT RETUNRED FROM COUNT STATEMENT DATABASE USING MAP 
+                pop_seach.push(channels);
+                popular = pop_seach[0].map(obj => {
+                  return {
+                    channel: obj.channel,
+                    count: Number(obj.count)
+                  }
+                })
+                popular.sort((a, b) => b.count - a.count);
+                //console.log(popular);
+                conn.end();
+            })
+            .catch(err => {
+                console.log("An error occurred: " + err);
+                conn.end();
+            });
+    })
+    .catch(err => {
+        console.log("An error occurred: " + err);
+    });
+let returnUrl;
+
+// Set route to start OAuth link, this is where you define scopes to request
+app.get('/auth/twitch', function(req, res) {
+  // Read the returnUrl parameter from the query string
+  returnUrl = req.query.returnUrl;
+  // Redirect the user back to the original URL if returnUrl is present and valid
+  passport.authenticate('twitch', { scope: 'user_read' })(req, res);
+});
+
+// Set route for OAuth redirect
+app.get('/auth/twitch/callback', function(req, res) {
+    passport.authenticate('twitch', { failureRedirect: '/', successRedirect: '/'})(req, res);
+});
+
+app.get('/', (req, res) => {
+  if(returnUrl && returnUrl.startsWith('chrome-extension://')) {
+    //const user = req.session.passport.user.data[0].display_name;
+    //const extensionId = 'kdilkflgpbfiemlmdgljafkckifnojbl';
+    //const url = `chrome-extension://${extensionId}/popup.html?id=${user}`;
+    res.send("<script>window.close();</script >")
+  }
+  if(req.session && req.session.passport && req.session.passport.user) {
+    display_name = req.session.passport.user.data[0].display_name;
+    access_token = req.session.passport.user.accessToken;
+    refresh_token = req.session.passport.user.refreshToken;
+    //localStorage.setItem('displayName', display_name);
+    res.render('auth', { display_name: display_name, just_searched: just_searched, popular: popular} );
+  } else {
+    display_name = null;
+    res.render('auth', { just_searched, popular} );
+  }
+});
+app.use('/',express.static('public'));
+
+app.get('/submit', (req, res) => {
+  res.render('auth', { just_searched, popular} );
+});
+app.get('/about', (req, res) => {
+  res.render('about');
+});
+app.get('/items/:id', (req, res) => {
+  const id = req.params.id;
+  item = results[0][id]
+
+  if (req.session && req.session.passport && req.session.passport.user) {
+    display_name = req.session.passport.user.data[0].display_name;
+    res.render('item', { display_name, item });
+  }else{
+    display_name = null;
+    res.render('item', { item });
+  }
+});
+app.get('/examples', (req, res) => {
+  res.render('examples');
+});
+app.post('/submit', (req, res) => {
+  const search = req.body.userSearch;
+  const searchType = req.body.searchType;
+  results = [];
+  // Perform database query or any other necessary processing here
+  // and pass the results to the 'results' view as an array of objects
+  if(searchType == "searchTerm"){
+    pool.getConnection()
+  .then(conn => {
+      conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
+          .then((rows) => {
+              //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+              results.push(rows);
+              conn.end();
+              sendResults = results[0];
+              if (req.session && req.session.passport && req.session.passport.user) {
+                display_name = req.session.passport.user.data[0].display_name;
+                res.render('results', { display_name, sendResults, search, searchType });
+              }else{
+                display_name = null;
+                res.render('results', { sendResults, search, searchType });
+              }
+          })
+          .catch(err => {
+              console.log("An error occurred: " + err);
+              conn.end();
+          });
+  })
+  .catch(err => {
+      console.log("An error occurred: " + err);
+  });
+  } else if(searchType == "Channel"){
+    pool.getConnection()
+  .then(conn => {
+      conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
+          .then((rows) => {
+              //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+              results.push(rows);
+              conn.end();
+              sendResults = results[0];
+              if (req.session && req.session.passport && req.session.passport.user) {
+                display_name = req.session.passport.user.data[0].display_name;
+                res.render('results', { display_name, sendResults, search, searchType });
+              }else{
+                display_name = null;
+                res.render('results', { sendResults, search, searchType });
+              }
+          })
+          .catch(err => {
+              console.log("An error occurred: " + err);
+              conn.end();
+          });
+  })
+  .catch(err => {
+      console.log("An error occurred: " + err);
+  });
+  }else if(searchType == "User"){
+    pool.getConnection()
+    .then(conn => {
+        conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+            .then((rows) => {
+                //const channels = rows.map(({ channel, count }) => ({ channel, count }));
+                results.push(rows);
+                conn.end();
+                sendResults = results[0];
+                if (req.session && req.session.passport && req.session.passport.user) {
+                  display_name = req.session.passport.user.data[0].display_name;
+                  res.render('results', { display_name, sendResults, search, searchType });
+                }else{
+                  display_name = null;
+                  res.render('results', { sendResults, search, searchType });
+                }
+            })
+            .catch(err => {
+                console.log("An error occurred: " + err);
+                conn.end();
+            });
+    })
+    .catch(err => {
+        console.log("An error occurred: " + err);
+    });
+  }
+  //results.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});

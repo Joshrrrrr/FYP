@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Twitch Feature Suite</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+  </head>
+  <body>
+    <header>
+      <button class="back-btn" style="justify-content: left;" onclick="goBack()">Back to all resutlts</button>
+      <% if (display_name) { %>
+        <button class="login-btn" id="profileButton"><%= display_name %></button>
+      <% } else { %>
+        <button class="login-btn" id="loginButton">Log in</button>
+      <% } %>
+      <button class="burger-menu">&#9776;</button>
+      <ul class="menu-options">
+        <li><a href="#" id="dark-mode-toggle">Dark mode</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/examples">Examples</a></li>
+      </ul>
+    </header>
+
+    <div class="search-container">
+      <div class="main-content">
+        <ul>
+          <li>
+            Search term: <%= item.searchTerm %>
+          </li>
+          <li>
+            Channel: <%= item.channel %>
+          </li>
+          <li>
+            Time of extension search: <%= item.timestamp %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <br><br><div class="search-container"><h3>Chat logs for this search:</h3></div><br>
+    <div class="search-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Chatter</th>
+            <th>Message</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i=0; i<item.searchResults.length; i++) { %>
+            <tr>
+              <td>
+                <a style="color:<%= item.searchResults[i].message_user_color %>"><%= item.searchResults[i].commenter_display_name %></a>
+              </td>
+              <td>
+                <%= item.searchResults[i].message_body %>
+              </td>
+              <td>
+                <a href="<%= item.searchResults[i].video_offset_link %>"><%= item.searchResults[i].video_offset_link %></a>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/item.js"></script>
+  </body>
+</html>
