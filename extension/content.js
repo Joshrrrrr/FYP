@@ -450,7 +450,6 @@ async function initTwitchVodMiner(){
         keepElmInBoundary(cont);
     }
     function initChatLogSearch(){
-        var match_whole = true;
         var search_type = 'every';
         //THIS IS ALL THE CHAT LOGS DOWNLOADED IN ONE ARRAY
         var unq_msgs = unqMultiKey(contain_arr.flat(),{},['commenter_name','message_body','content_offset_seconds'])
@@ -483,7 +482,8 @@ async function initTwitchVodMiner(){
             'channel': token_params.channel_login,
             'user': 'your_user',
             'timestamp': date.toLocaleString(),
-            'searchterm': search.searches[0].val
+            'searchterm': search.searches[0].val,
+            'matchwhole': match_whole
         },
         body: JSON.stringify(filtered_chats.slice(0,100))
 

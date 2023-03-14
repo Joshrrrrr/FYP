@@ -97,15 +97,17 @@ app.post("/api", (req, res) => {
   const user = req.headers.user;
   const timestamp = req.headers.timestamp;
   const searchTerm = req.headers.searchterm;
+  const matchWhole = req.headers.matchwhole;
   const searchResults = JSON.stringify(req.body);
 
+  let matchWholeWordValue = matchWhole ? 1 : 0;
   // Perform some logic or data processing here, such as querying a database
   async function insertData() {
     let conn;
     try {
       conn = await pool.getConnection();
-      var sql = 'INSERT INTO extension_searches (channel, user, timestamp, searchTerm, searchResults) VALUES (?, ?, ?, ?, ?)';
-      const res = await conn.query(sql, [channel, user, timestamp, searchTerm, searchResults]);
+      var sql = 'INSERT INTO extension_searches (channel, user, timestamp, searchTerm, searchResults, match_whole_word) VALUES (?, ?, ?, ?, ?, ?)';
+      const res = await conn.query(sql, [channel, user, timestamp, searchTerm, searchResults, matchWholeWordValue]);
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -125,12 +127,13 @@ app.post("/api", (req, res) => {
       user: user,
       timestamp: timestamp,
       searchTerm: searchTerm,
-      searchResults: searchResults
+      searchResults: searchResults,
+      matchWhole: matchWhole
     }
   });
   //searchResults.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
 });
-
+//Pull data for popular channels
 pool.getConnection()
     .then(conn => {
         conn.query('SELECT channel, COUNT(*) AS count FROM extension_searches GROUP BY channel')
