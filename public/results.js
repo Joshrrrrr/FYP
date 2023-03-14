@@ -14,6 +14,7 @@ const sliceItems = document.querySelectorAll('.slice');
 const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]');
 const form = document.getElementById("myForm");
 const submitBtn = document.querySelector('.search-icon-btn');
+const matchWholeWordCheckbox =  document.getElementById("match-whole-word");
 submitBtn.addEventListener('click', validateForm);
 
 function validateForm(event) {
@@ -28,6 +29,18 @@ function validateForm(event) {
     alert('Please select at least one search type.');
   }
 }
+matchWholeWordCheckbox.addEventListener('click', (event) => {
+  // handle the click event here
+  let hiddenInput = form.querySelector('input[name="match_whole_word"]');
+  if (!hiddenInput) {
+    hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'wholeWord');
+    form.appendChild(hiddenInput);
+  }
+  // Set the value of the hidden input field to the checkbox value
+  hiddenInput.value = matchWholeWordCheckbox.checked ? 'match' : '0';
+});
 
 searchTypeCheckboxes.forEach(checkbox => {
   checkbox.addEventListener('click', () => {
@@ -38,7 +51,6 @@ searchTypeCheckboxes.forEach(checkbox => {
       input.type = "hidden";
       input.id = "hidden_" + checkbox.id;
       input.name = checkbox.name;
-      console.log(input)
       form.appendChild(input);
     }
     if (checkbox.checked) {

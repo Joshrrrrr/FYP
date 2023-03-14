@@ -16,6 +16,7 @@ const itemsContainer = document.querySelectorAll('.items-container');
 const fltDropdownBtn = document.querySelector('.filter-button');
 const fltDropdownContent = document.querySelector('.filter-dropdown-content');
 const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]');
+const matchWholeWordCheckbox = document.querySelectorAll('input[name="wholeWord"]');
 
 let searchTypeInput= 'searchTerm';
 

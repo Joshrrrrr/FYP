@@ -90,7 +90,7 @@ function(accessToken, refreshToken, profile, done) {
 let just_searched = [];
 let pop_seach = [];
 let popular = [];
-
+let matchWholeWordValue;
 app.post("/api", (req, res) => {
   // Get the data from the request body
   const channel = req.headers.channel;
@@ -100,7 +100,7 @@ app.post("/api", (req, res) => {
   const matchWhole = req.headers.matchwhole;
   const searchResults = JSON.stringify(req.body);
 
-  let matchWholeWordValue = matchWhole ? 1 : 0;
+  matchWholeWordValue = matchWhole ? 1 : 0;
   // Perform some logic or data processing here, such as querying a database
   async function insertData() {
     let conn;
@@ -219,16 +219,15 @@ app.get('/examples', (req, res) => {
 app.post('/submit', (req, res) => {
   const search = req.body.userSearch;
   const searchType = req.body.searchType;
-  wholeword=true;
-  console.log(req.body)
+  const wholeWord=req.body.wholeWord;
   results = [];
   // Perform database query or any other necessary processing here
   // and pass the results to the 'results' view as an array of objects
-  if(wholeword){
+  if(wholeWord){
     if(searchType == "searchTerm"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ? AND match_whole_word = 1', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -259,7 +258,7 @@ app.post('/submit', (req, res) => {
     } else if(searchType == "Channel"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
+        conn.query('SELECT * FROM extension_searches WHERE channel = ? AND match_whole_word = 1', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -284,7 +283,7 @@ app.post('/submit', (req, res) => {
     }else if(searchType == "User"){
       pool.getConnection()
       .then(conn => {
-          conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+          conn.query('SELECT * FROM extension_searches WHERE user = ? AND match_whole_word = 1', [search])
               .then((rows) => {
                   //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                   results.push(rows);
@@ -311,7 +310,7 @@ app.post('/submit', (req, res) => {
     if(searchType == "searchTerm"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?', [search])
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ? AND match_whole_word = 0', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -336,7 +335,7 @@ app.post('/submit', (req, res) => {
     } else if(searchType == "Channel"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE channel = ?', [search])
+        conn.query('SELECT * FROM extension_searches WHERE channel = ? AND match_whole_word = 0', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -361,7 +360,7 @@ app.post('/submit', (req, res) => {
     }else if(searchType == "User"){
       pool.getConnection()
       .then(conn => {
-          conn.query('SELECT * FROM extension_searches WHERE user = ?', [search])
+          conn.query('SELECT * FROM extension_searches WHERE user = ? AND match_whole_word = 0', [search])
               .then((rows) => {
                   //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                   results.push(rows);
