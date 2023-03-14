@@ -183,7 +183,7 @@ async function initTwitchVodMiner(){
         let cont = gi(document,'download_notif');
         a(cont, [['id', 'download_notif'], ['style', `background: #242931; border: 2px solid #242931; border-radius: 0.2em;`]]);
         let perc = ele('div');
-        a(perc, [['id', 'percentage_bar'],['class','quickli_options_container_main'], ['style', `width: 0px; height: 36px; border-bottom-right-radius: 0.2em; border-top-right-radius: 0.2em; transition: all 1s;`]]);
+        a(perc, [['id', 'percentage_bar'],['class','options_main_cont'], ['style', `width: 0px; height: 36px; border-bottom-right-radius: 0.2em; border-top-right-radius: 0.2em; transition: all 1s;`]]);
         cont.appendChild(perc);
         let txt = ele('div');
         a(txt, [['id', 'percentage_txt'], ['style', `color: #ffffff; width: 300px;`]]);
@@ -282,7 +282,7 @@ async function initTwitchVodMiner(){
             .always_white:hover {
                 color: #ffffff;
             }
-            .quickli_options_container_main {
+            .options_main_cont {
                 background: #5b6980;
             }
             @keyframes gradient_quickli {
@@ -310,11 +310,6 @@ async function initTwitchVodMiner(){
 
         inlineStyler(cont,`{display: grid; grid-template-columns: 582px; text-align: center; height: ${height}px; max-width: ${width}px; background: #495466; color: #000000; border-radius: 1em; padding: 12px; transition: all 111ms; position: fixed; z-index: ${topZIndexer()};}`);
         document.body.appendChild(cont);
-        //const mover = ele('div');
-        //inlineStyler(mover,`{cursor: move; user-select: none;}`);
-        //panel.appendChild(mover);
-        //mover.onmouseover = dragElement;
-        
 
         const left = ele('div');
         a(left,[['id','main_card']])
@@ -334,50 +329,9 @@ async function initTwitchVodMiner(){
         a(head_desc,[['id','download_notif']]);
         left.appendChild(head_desc);
 
-        //var username_cont = ele('div');
-        //inlineStyler(username_cont,`{display: grid; grid-template-columns: 50px 1fr; border-radius: 2em; grid-gap: 4px;}`);
-        //left.appendChild(username_cont);
-        //var username_search_type_cont = ele('div');
-        //a(username_search_type_cont,[['id','username_search_type'],['class','textarea']]);
-        //username_cont.appendChild(username_search_type_cont);
-        //inlineStyler(username_search_type_cont,`{height: 20px; border-radius: 2em;}`);
-        //addTypeSwitch(username_search_type_cont,'username_search_type_switch');
-
-        //var username = ele('input');
-        //a(username,[['id','commenter_display_name'],['placeholder','search username'],['class','textarea pad8']]);
-        //username_cont.appendChild(username);
-        //username.onkeyup = (e)=> {
-        //    console.log(e.key)
-        //    if(e.key == "Enter"){
-        //        initChatLogSearch();
-        //    }
-        //};
-/*
-        let boolcont = ele('div');
-        //left.appendChild(boolcont);
-        a(boolcont,[['class','textarea']]);
-        inlineStyler(boolcont,`{width: 50px; text-align: center; border-radius: 2em; display: grid; grid-template-columns: 32px 1fr; grid-gap:8px;}`);
-            let boolopt = ele('div');
-            boolcont.appendChild(boolopt);
-            a(boolopt,[['id','everysome_type_switch'],['class','everysome search_logs_btn_main'],['everysome','every']]);
-            inlineStyler(boolopt,`{z-index: ${topZIndexer()+1500}; height: 20px; width: 20px; background: #4287f5; border: 1px solid #d4e4ff; box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 6px 0px, rgba(255, 255, 255, 0.8) -6px -2px 6px -3px;}`);
-            boolopt.onclick = everySomeSwitch;
-
-            let boolcard = ele('div');
-            boolcont.appendChild(boolcard);
-            inlineStyler(boolcard,`{user-select: none; z-index: ${topZIndexer()}; background: transparent; color: #e73c7e; text-align: center; transform:translate(-20px,0px);}`);
-            boolcard.innerText = 'AND';
-*/
-
         var chat_msg_cont = ele('div');
         inlineStyler(chat_msg_cont,`{border-radius: 2em; grid-gap: 4px;}`);
         left.appendChild(chat_msg_cont);
-
-        //var chat_msg_search_type_cont = ele('div');
-        //a(chat_msg_search_type_cont,[['id','username_search_type'],['class','textarea']]);
-        //chat_msg_cont.appendChild(chat_msg_search_type_cont);
-        //inlineStyler(chat_msg_search_type_cont,`{height: 20px; border-radius: 2em;}`);
-        //addTypeSwitch(chat_msg_search_type_cont,'chat_msg_search_type_switch');
 
         var chat_msg = ele('input');
         a(chat_msg,[['id','message_body'],['placeholder','Keyword in chat'],['class','textarea pad12']]);
@@ -490,6 +444,7 @@ async function initTwitchVodMiner(){
     }
     function initChatLogSearch(){
         var search_type = 'every';
+        //THIS IS ALL THE CHAT LOGS DOWNLOADED IN ONE ARRAY
         var unq_msgs = unqMultiKey(contain_arr.flat(),{},['commenter_name','message_body','content_offset_seconds'])
         var username_search_type = 'string';
         var chat_msg_search_type = 'string';
@@ -509,7 +464,6 @@ async function initTwitchVodMiner(){
             ].filter(i=> i.val),
             search_type: search_type,
         }
-
         let filtered_chats = searchCommentsByKeysWithBool(unq_msgs,search);
         addSearchResultsToForm('results_main',filtered_chats,search);
         let date = new Date();
@@ -536,7 +490,13 @@ async function initTwitchVodMiner(){
         }
     function searchCommentsByKeysWithBool(arr,search){
         if(search?.searches?.length){
-            return arr.filter(r=> search.searches[search.search_type](sob=> sob.x_arr.every(x=> x.test(r[sob.key]))))
+            arr.filter(r=> search.searches[search.search_type](sob=> sob.x_arr.every(x=> x.test(r[sob.key]))))
+            const regex = new RegExp(`\\b${search.searches[0].val}\\b`, 'i');
+            const filteredMessages  = arr.filter((message) => {
+                console.log(message)
+                return regex.test(message.message_body);
+              });
+            return filteredMessages;
         }else{
             return [];
         }   
@@ -557,8 +517,8 @@ async function initTwitchVodMiner(){
         let nav = document.getElementsByTagName('nav')?.[0];
         let search_bar = nav?.getElementsByTagName('div')?.[0] ? Array.from(nav?.getElementsByTagName('div')).filter(i=> i.getAttribute('data-a-target') == "nav-search-box")?.[0]?.parentElement?.parentElement : [];
         let dlbtn = document.createElement('div');
-        a(dlbtn,[['id','injectVODsearchBtnIntoHeader'],['class','quickli_options_container_main'],['style','margin-bottom:2px;margin-top:8px;border-radius: 2em; cursor: pointer;']]);
-        // a(dlbtn,[['id','injectVODsearchBtnIntoHeader'],['class','quickli_options_container_main'],['style',`position: fixed; top: 20px; border-radius: 0.4em; height: 38px; transform: translate(0px, 5px); cursor: pointer; z-index: ${topZIndexer()};`]]);
+        a(dlbtn,[['id','injectVODsearchBtnIntoHeader'],['class','options_main_cont'],['style','margin-bottom:2px;margin-top:8px;border-radius: 2em; cursor: pointer;']]);
+        // a(dlbtn,[['id','injectVODsearchBtnIntoHeader'],['class','options_main_cont'],['style',`position: fixed; top: 20px; border-radius: 0.4em; height: 38px; transform: translate(0px, 5px); cursor: pointer; z-index: ${topZIndexer()};`]]);
         dlbtn.innerHTML = `<img style="margin-top:5px;margin-left:2px;width:65px; height:30px" src="https://cdn-icons-png.flaticon.com/512/3917/3917754.png"></img>`;
         search_bar.parentElement.insertBefore(dlbtn,search_bar.nextSibling);
         dlbtn.onclick = runVODChatExtraction;
