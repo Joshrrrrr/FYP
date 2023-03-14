@@ -23,6 +23,7 @@ searchTypeCheckboxes.forEach(checkbox => {
       input.type = "hidden";
       input.id = "hidden_" + checkbox.id;
       input.name = checkbox.name;
+      console.log(input)
       form.appendChild(input);
     }
     if (checkbox.checked) {
@@ -37,6 +38,18 @@ searchTypeCheckboxes.forEach(checkbox => {
       }
     });
     searchTypeInput = checkbox.value;
+  });
+});
+
+form.addEventListener("submit", () => {
+  // remove hidden input fields for unchecked checkboxes
+  searchTypeCheckboxes.forEach((checkbox) => {
+    if (!checkbox.checked) {
+      let input = document.getElementById("hidden_" + checkbox.id);
+      if (input) {
+        input.remove();
+      }
+    }
   });
 });
 

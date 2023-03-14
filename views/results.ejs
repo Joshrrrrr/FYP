@@ -25,7 +25,7 @@
     </header>
     
     <div class="search-heading">
-      <h1>Results for <%= searchType %> <%= search %></h1>
+      <h1>Results for <%= searchType.toUpperCase() %> <%= search %></h1>
       <p class="search-para">The extension was used 221 other times to search chat logs</p>
     </div>
 
@@ -42,7 +42,7 @@
                   <input type="checkbox" id="match-whole-word">
                 </li>
                 <li><label for="SearchTerm">Search Term</label>
-                  <input name="searchType" value="searchTerm" type="checkbox" id="SearchTerm" checked></li>
+                  <input name="searchType" value="searchTerm" type="checkbox" id="SearchTerm"></li>
                 <li><label for="Channel">Channel</label>
                   <input name="searchType" value="Channel" type="checkbox" id="Channel"></li>
                 <li><label for="User">User</label>

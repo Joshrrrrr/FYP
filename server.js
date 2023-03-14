@@ -216,6 +216,7 @@ app.get('/examples', (req, res) => {
 app.post('/submit', (req, res) => {
   const search = req.body.userSearch;
   const searchType = req.body.searchType;
+  console.log(req.body)
   results = [];
   // Perform database query or any other necessary processing here
   // and pass the results to the 'results' view as an array of objects
