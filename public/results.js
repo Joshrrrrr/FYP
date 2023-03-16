@@ -16,6 +16,17 @@ const form = document.getElementById("myForm");
 const submitBtn = document.querySelector('.search-icon-btn');
 const matchWholeWordCheckbox =  document.getElementById("match-whole-word");
 submitBtn.addEventListener('click', validateForm);
+const suggestBtn = document.querySelector('.suggest-btn');
+
+suggestBtn.addEventListener('click', function() {
+  if (!req.cookies['connect.sid']) {
+    // If the cookie does not exist, ask to the login
+    alert('Please login with Twitch')
+  } else {
+    // If the cookie exists, render the new suggestion form
+    res.render('suggest-new');
+  }
+});
 
 function validateForm(event) {
   let isChecked = false;

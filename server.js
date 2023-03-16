@@ -188,6 +188,10 @@ app.get('/about', (req, res) => {
 app.get('/examples', (req, res) => {
   res.render('examples');
 });
+app.get('/logout', (req, res) => {
+  res.clearCookie('connect.sid');
+  res.redirect('/');
+});
 app.post('/submit', (req, res) => {
   const search = req.body.userSearch;
   const searchType = req.body.searchType;
@@ -207,10 +211,10 @@ app.post('/submit', (req, res) => {
                 sendResults = results[0];
                 if (req.session && req.session.passport && req.session.passport.user) {
                   display_name = req.session.passport.user.data[0].display_name;
-                  res.render('results', { display_name, sendResults, search, searchType });
+                  res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                 }else{
                   display_name = null;
-                  res.render('results', { sendResults, search, searchType });
+                  res.render('results',{ just_searched, sendResults, search, searchType });
                 }
             })
             .catch(err => {
@@ -232,10 +236,10 @@ app.post('/submit', (req, res) => {
                 sendResults = results[0];
                 if (req.session && req.session.passport && req.session.passport.user) {
                   display_name = req.session.passport.user.data[0].display_name;
-                  res.render('results', { display_name, sendResults, search, searchType });
+                  res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                 }else{
                   display_name = null;
-                  res.render('results', { sendResults, search, searchType });
+                  res.render('results',{ just_searched, sendResults, search, searchType });
                 }
             })
             .catch(err => {
@@ -257,10 +261,10 @@ app.post('/submit', (req, res) => {
                   sendResults = results[0];
                   if (req.session && req.session.passport && req.session.passport.user) {
                     display_name = req.session.passport.user.data[0].display_name;
-                    res.render('results', { display_name, sendResults, search, searchType });
+                    res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                   }else{
                     display_name = null;
-                    res.render('results', { sendResults, search, searchType });
+                    res.render('results',{ just_searched, sendResults, search, searchType });
                   }
               })
               .catch(err => {
@@ -284,10 +288,10 @@ app.post('/submit', (req, res) => {
                 sendResults = results[0];
                 if (req.session && req.session.passport && req.session.passport.user) {
                   display_name = req.session.passport.user.data[0].display_name;
-                  res.render('results', { display_name, sendResults, search, searchType });
+                  res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                 }else{
                   display_name = null;
-                  res.render('results', { sendResults, search, searchType});
+                  res.render('results',{ just_searched, sendResults, search, searchType});
                 }
             })
             .catch(err => {
@@ -309,10 +313,10 @@ app.post('/submit', (req, res) => {
                 sendResults = results[0];
                 if (req.session && req.session.passport && req.session.passport.user) {
                   display_name = req.session.passport.user.data[0].display_name;
-                  res.render('results', { display_name, sendResults, search, searchType });
+                  res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                 }else{
                   display_name = null;
-                  res.render('results', { sendResults, search, searchType });
+                  res.render('results',{ just_searched, sendResults, search, searchType });
                 }
             })
             .catch(err => {
@@ -334,10 +338,10 @@ app.post('/submit', (req, res) => {
                   sendResults = results[0];
                   if (req.session && req.session.passport && req.session.passport.user) {
                     display_name = req.session.passport.user.data[0].display_name;
-                    res.render('results', { display_name, sendResults, search, searchType });
+                    res.render('results',{ just_searched, display_name, sendResults, search, searchType });
                   }else{
                     display_name = null;
-                    res.render('results', { sendResults, search, searchType });
+                    res.render('results',{ just_searched, sendResults, search, searchType });
                   }
               })
               .catch(err => {

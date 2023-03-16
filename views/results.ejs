@@ -26,7 +26,7 @@
     
     <div class="search-heading">
       <h1>Results for <%= searchType.toUpperCase() %> <%= search %></h1>
-      <p class="search-para">The extension was used 221 other times to search chat logs</p>
+      <p class="search-para">The extension was used <%= (just_searched.length)-1 %> other times to search chat logs</p>
     </div>
 
     <div class="search-container">
@@ -35,17 +35,16 @@
             <div class="top-heading">
               <h1>Search type &gt; </h1>
             </div>
-
             <div class="card-content">
               <ul class="card-list">
-                <li><label for="match-whole-word">Match Whole Word</label>
+                <li class="emotes"><label for="match-whole-word">Match Whole Word</label>
                   <input name="wholeWord" value="match" type="checkbox" id="match-whole-word">
                 </li>
-                <li><label for="SearchTerm">Search Term</label>
+                <li class="emotes"><label for="SearchTerm">Search Term</label>
                   <input name="searchType" value="searchTerm" type="checkbox" id="SearchTerm"></li>
-                <li><label for="Channel">Channel</label>
+                <li class="emotes"><label for="Channel">Channel</label>
                   <input name="searchType" value="Channel" type="checkbox" id="Channel"></li>
-                <li><label for="User">User</label>
+                <li class="emotes"><label for="User">User</label>
                   <input name="searchType" value="User" type="checkbox" id="User"></li>
               </ul>
             </div>
@@ -55,12 +54,14 @@
             <div class="top-heading">
               <h1>Emote searches &gt; </h1>
             </div>
-
             <div class="card-content">
               <ul class="card-list">
-                <li>Emote 1</li>
-                <li>Emote 2</li>
-                <li>Emote 3</li>
+                <li class="emotes"><img src="OMEGALUL.png" width="43" height="43" alt="OMEGALUL emote">
+                  <span class="emote-list">(OMEGALUL)</span></li>
+                <li class="emotes"><img src="Sadge.png" width="43" height="43" alt="Sadge emote">
+                  <span class="emote-list">(Sadge)</span></li>
+                <li class="emotes"><img src="heart.png" width="43" height="43" alt="heart emote">
+                  <span class="emote-list">(<3)</span></li>
               </ul>
             </div>
           </div>
@@ -74,7 +75,7 @@
         <ul>
           <% sendResults.forEach((result, index) => { %>
             <a href="/items/<%= index %>"><li>Channel: <%= result.channel %><br><br>
-              <p>Chatters: <% var results = JSON.parse(result.searchResults); 
+              <p class="slice">Chatters: <% var results = JSON.parse(result.searchResults); 
                 for(var i=0; i<results.length; i++) { %>
               <%= results[i].commenter_display_name %>
             <% } %></p>

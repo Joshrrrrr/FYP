@@ -98,6 +98,14 @@ input[type=checkbox]:checked {
   color: #b7c1d1;
   cursor: pointer;
 }
+.prof-btn{
+  margin-left: auto;
+  font-size: 18px;
+  padding: 10px 13px;
+  border: none;
+  background-color: #495466;
+  color: #b7c1d1;
+}
 .burger-menu {
   order: 2;
   font-size: 18px;
@@ -406,6 +414,9 @@ h3 {
 }
 
 .suggest-btn {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
   background-color: #5b6980;
   color: white;
   padding: 1.2rem 1rem;
@@ -425,6 +436,18 @@ h3 {
   padding: 1rem;
   margin: 0.1rem 0;
   background-color: #242931;
+}
+.emote-list{
+  margin-left: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+.emotes{
+  display: flex;
+  align-items: center;
 }
 table {
   font-family: 'Lato', sans-serif;

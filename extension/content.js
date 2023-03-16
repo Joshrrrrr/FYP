@@ -642,7 +642,7 @@ async function initTwitchVodMiner(){
             user.innerText = `${vod_info.user}`;
             a(user,[['class','hh4']]);
 
-            const maxLength = 70;
+            const maxLength = 77;
             const shortenedTitle = shortenTitle(vod_info.title, maxLength);
             let title = ele('h4')
             title.innerText = `${shortenedTitle}`;
