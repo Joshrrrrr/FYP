@@ -7,7 +7,7 @@
   </head>
   <body>
     <header>
-      <form id ="myForm" class="search-btn" action="/submit" method="POST">
+      <form id ="myForm" action="/submit" method="POST">
         <input type="text" class="search-bar-results" id= "userSearch" name="userSearch"  placeholder="Search..." required/>
         <button type="submit" class="search-icon-btn">&#128269;</button>
       </form>
@@ -62,14 +62,18 @@
               <h1>Emote searches &gt; </h1>
             </div>
             <div class="card-content">
-              <ul class="card-list">
-                <li class="emotes"><img src="OMEGALUL.png" width="43" height="43" alt="OMEGALUL emote">
-                  <span class="emote-list">(OMEGALUL)</span></li>
-                <li class="emotes"><img src="Sadge.png" width="43" height="43" alt="Sadge emote">
-                  <span class="emote-list">(Sadge)</span></li>
-                <li class="emotes"><img src="heart.png" width="43" height="43" alt="heart emote">
-                  <span class="emote-list">(<3)</span></li>
-              </ul>
+              <form action="/submit" method="POST">
+                <input type="hidden" name="userSearch" id="value">
+                <input type="hidden" name="searchType" id="searchTypeValue">
+                <ul class="card-list">
+                  <li id="emote1"class="emotes"><img src="OMEGALUL.png" width="47" height="43" alt="OMEGALUL emote">
+                    <span class="emote-list">(OMEGALUL)</span></li>
+                  <li id="emote2" class="emotes"><img src="Sadge.png" width="47" height="43" alt="Sadge emote">
+                    <span class="emote-list">(Sadge)</span></li>
+                  <li id="emote3" class="emotes"><img src="heart.png" width="47" height="43" alt="heart emote">
+                    <span class="emote-list">(&lt;3)</span></li>
+                </ul>
+              </form>
             </div>
           </div>
 

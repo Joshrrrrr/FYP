@@ -1,5 +1,4 @@
 const loginButton = document.getElementById('loginButton');
-console.log('button found');
 loginButton.addEventListener('click', () => {
   console.log(window.location.href)
   window.location.href = 'https://www.twitch-features.click/auth/twitch?returnUrl=' + window.location.href;

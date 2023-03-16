@@ -108,7 +108,6 @@ app.post("/api", (req, res) => {
       conn = await pool.getConnection();
       var sql = 'INSERT INTO extension_searches (channel, user, timestamp, searchTerm, searchResults, match_whole_word) VALUES (?, ?, ?, ?, ?, ?)';
       const res = await conn.query(sql, [channel, user, timestamp, searchTerm, searchResults, matchWholeWordValue]);
-      console.log(res);
     } catch (err) {
       console.log(err);
     } finally {
@@ -121,7 +120,6 @@ app.post("/api", (req, res) => {
   // Increment count for the channel or add new channel to popular array
   if (channel !== undefined) {
     const index = popular.findIndex(({ channel: name }) => name === channel);
-    console.log(index)
     if (index === -1) {
       popular.push({ channel: channel, count: 1 });
     } else {
@@ -360,7 +358,6 @@ app.post('/submit', (req, res) => {
 app.get('/items/:id', (req, res) => {
   const id = req.params.id;
   item = results[0][id]
-  console.log(item)
   if (req.session && req.session.passport && req.session.passport.user) {
     display_name = req.session.passport.user.data[0].display_name;
     res.render('item', { display_name, item });
@@ -370,5 +367,5 @@ app.get('/items/:id', (req, res) => {
   }
 });
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running port: ${port}`);
 });

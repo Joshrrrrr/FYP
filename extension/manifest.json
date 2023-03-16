@@ -1,6 +1,6 @@
 {
       "manifest_version": 3,
-      "name": "fyp",
+      "name": "Twitch Features",
       "version": "1",
       "description": "Search Twitch chat logs",
       "content_scripts": [
@@ -12,9 +12,6 @@
       "background" : {
         "service_worker" : "background.js"
       },
-      "permissions": [
-        "storage"
-      ],
       "host_permissions":[
         "https://gql.twitch.tv/gql",
         "https://api.twitch.tv/*"
@@ -26,6 +23,6 @@
       "action": {
         "default_popup": "popup.html",
         "default_icon": "search-icon.png",
-        "default_title": "fypii"
+        "default_title": "Twitch Features"
     }
   }

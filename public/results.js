@@ -18,6 +18,29 @@ const body = document.querySelector('body');
 const inputField = document.getElementById('input-field');
 const profileButton = document.getElementById('profileButton');
 let emoteSuggest = [];
+const emote1 = document.querySelector("#emote1");
+const emote2 = document.querySelector("#emote2");
+const emote3 = document.querySelector("#emote3");
+const valueInput = document.querySelector("#value");
+const searchTypeInput = document.getElementById('searchTypeValue');
+
+emote1.addEventListener("click", () => {
+  valueInput.value = "OMEGALUL";
+  searchTypeInput.value = 'searchTerm';
+  document.forms[2].submit();
+});
+
+emote2.addEventListener("click", () => {
+  valueInput.value = "Sadge";
+  searchTypeInput.value = 'searchTerm';
+  document.forms[2].submit();
+});
+
+emote3.addEventListener("click", () => {
+  valueInput.value = "<3";
+  searchTypeInput.value = 'searchTerm';
+  document.forms[2].submit();
+});
 function handleInputChange() {
   if (inputField.value === '') {
     suggestBtn2.disabled = true;
