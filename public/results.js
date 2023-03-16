@@ -1,9 +1,4 @@
 const loginButton = document.getElementById('loginButton');
-console.log('button found');
-loginButton.addEventListener('click', () => {
-  console.log(window.location.href)
-  window.location.href = 'https://www.twitch-features.click/auth/twitch?returnUrl=' + window.location.href;
-});
 const burgerMenu = document.querySelector('.burger-menu');
 const menuOptions = document.querySelector('.menu-options');
 const head = document.querySelector('.head');
@@ -15,19 +10,63 @@ const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]
 const form = document.getElementById("myForm");
 const submitBtn = document.querySelector('.search-icon-btn');
 const matchWholeWordCheckbox =  document.getElementById("match-whole-word");
-submitBtn.addEventListener('click', validateForm);
 const suggestBtn = document.querySelector('.suggest-btn');
+const modal = document.getElementById('modal');
+const closeButton = document.getElementById('close-btn');
+const body = document.querySelector('body');
+
+function handleInputChange() {
+  if (inputField.value === '') {
+    submitBtn.disabled = true;
+  } else {
+    submitBtn.disabled = false;
+  }
+}
+
+if (loginButton) {
+  loginButton.addEventListener('click', () => {
+    window.location.href = 'https://www.twitch-features.click/auth/twitch?returnUrl=' + window.location.href;
+  });
+}
+// check if profile button exists
+const profileButton = document.getElementById('profileButton');
+if (profileButton) {
+  // create sign out option
+  const signOutOption = document.createElement('a');
+  signOutOption.classList.add('dropdown-item');
+  signOutOption.href = '/logout';
+  signOutOption.textContent = 'Sign Out';
+
+  // add sign out option to burger menu
+  menuOptions.appendChild(signOutOption);
+}
+
+submitBtn.addEventListener('click', validateForm);
 
 suggestBtn.addEventListener('click', function() {
-  if (!req.cookies['connect.sid']) {
+  if (document.cookie.includes('connect.sid')) {
     // If the cookie does not exist, ask to the login
-    alert('Please login with Twitch')
+    const overlay = document.createElement('div');
+    overlay.id = 'overlay';
+    modal.classList.add('show-modal');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
   } else {
     // If the cookie exists, render the new suggestion form
-    res.render('suggest-new');
+    //alert('Please login with Twitch')
+    modal.classList.add('show-modal');
+    const overlay = document.createElement('div');
+    overlay.id = 'overlay';
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
   }
 });
-
+if(closeButton){
+  closeButton.addEventListener('click', () => {
+    modal.classList.remove('show-modal');
+    document.getElementById('overlay').remove();
+  });
+}
 function validateForm(event) {
   let isChecked = false;
   searchTypeCheckboxes.forEach(function(checkbox) {

@@ -28,7 +28,14 @@
       <h1>Results for <%= searchType.toUpperCase() %> <%= search %></h1>
       <p class="search-para">The extension was used <%= (just_searched.length)-1 %> other times to search chat logs</p>
     </div>
-
+    <div id="modal">
+      <button id="close-btn">&times;</button>
+      <br><h2>Suggest an emote</h2><br>
+      <form>
+        <input class="search-bar" style="width:90%;margin-bottom: 10px;font-size: 10px;"type="text" id="input-field" placeholder="Enter emote search suggestion"><br><br>
+        <button type="submit" id="submit-btn" disabled>Suggest</button>
+      </form>
+    </div>
     <div class="search-container">
       <div class="search-left">
           <div class="search-types card">
@@ -37,14 +44,14 @@
             </div>
             <div class="card-content">
               <ul class="card-list">
-                <li class="emotes"><label for="match-whole-word">Match Whole Word</label>
+                <li><label style="font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px;" for="match-whole-word">Match Whole Word</label>
                   <input name="wholeWord" value="match" type="checkbox" id="match-whole-word">
                 </li>
-                <li class="emotes"><label for="SearchTerm">Search Term</label>
+                <li><label style="font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px;" for="SearchTerm">Search Term</label>
                   <input name="searchType" value="searchTerm" type="checkbox" id="SearchTerm"></li>
-                <li class="emotes"><label for="Channel">Channel</label>
+                <li><label style="font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px;" for="Channel">Channel</label>
                   <input name="searchType" value="Channel" type="checkbox" id="Channel"></li>
-                <li class="emotes"><label for="User">User</label>
+                <li><label style="font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px;" for="User">User</label>
                   <input name="searchType" value="User" type="checkbox" id="User"></li>
               </ul>
             </div>
