@@ -11,15 +11,18 @@ const form = document.getElementById("myForm");
 const submitBtn = document.querySelector('.search-icon-btn');
 const matchWholeWordCheckbox =  document.getElementById("match-whole-word");
 const suggestBtn = document.querySelector('.suggest-btn');
+const suggestBtn2 = document.getElementById('submit-btn');
 const modal = document.getElementById('modal');
 const closeButton = document.getElementById('close-btn');
 const body = document.querySelector('body');
-
+const inputField = document.getElementById('input-field');
+const profileButton = document.getElementById('profileButton');
+let emoteSuggest = [];
 function handleInputChange() {
   if (inputField.value === '') {
-    submitBtn.disabled = true;
+    suggestBtn2.disabled = true;
   } else {
-    submitBtn.disabled = false;
+    suggestBtn2.disabled = false;
   }
 }
 
@@ -29,7 +32,6 @@ if (loginButton) {
   });
 }
 // check if profile button exists
-const profileButton = document.getElementById('profileButton');
 if (profileButton) {
   // create sign out option
   const signOutOption = document.createElement('a');
@@ -40,6 +42,8 @@ if (profileButton) {
   // add sign out option to burger menu
   menuOptions.appendChild(signOutOption);
 }
+
+inputField.addEventListener('input', handleInputChange);
 
 submitBtn.addEventListener('click', validateForm);
 
@@ -60,6 +64,15 @@ suggestBtn.addEventListener('click', function() {
     overlay.classList.add('overlay');
     document.body.appendChild(overlay);
   }
+});
+// Submit form when 'Suggest' button is clicked
+document.getElementById('suggest-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  // Handle form submission here
+  alert('Submission '+inputField.value+' logged');
+  emoteSuggest.push(inputField.value);
+  modal.classList.remove('show-modal');
+  document.getElementById('overlay').remove();
 });
 if(closeButton){
   closeButton.addEventListener('click', () => {
