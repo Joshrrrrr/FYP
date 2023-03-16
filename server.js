@@ -13,7 +13,7 @@ const port = 3000;
 const TWITCH_CLIENT_ID = 'jfzv7avfgwhd0oebjb8b2qr3bf6z5i';
 const TWITCH_SECRET    = '52k1vpbr4pu09421erk3uwf916w2kk';
 const SESSION_SECRET   = '1234567890';
-const CALLBACK_URL     = 'http://localhost:3000/auth/twitch/callback';  // You can run locally with - http://localhost:3000/auth/twitch/callback
+const CALLBACK_URL     = 'https://www.twitch-features.click/auth/twitch/callback';  // You can run locally with - http://localhost:3000/auth/twitch/callback
 let results =[];
 
 var corsOptions = {
@@ -90,7 +90,8 @@ function(accessToken, refreshToken, profile, done) {
 let just_searched = [];
 let pop_seach = [];
 let popular = [];
-let matchWholeWordValue;
+let returnUrl;
+
 app.post("/api", (req, res) => {
   // Get the data from the request body
   const channel = req.headers.channel;
@@ -99,8 +100,7 @@ app.post("/api", (req, res) => {
   const searchTerm = req.headers.searchterm;
   const matchWhole = req.headers.matchwhole;
   const searchResults = JSON.stringify(req.body);
-
-  matchWholeWordValue = matchWhole ? 1 : 0;
+  const matchWholeWordValue = matchWhole === 'true' ? 1 : 0;
   // Perform some logic or data processing here, such as querying a database
   async function insertData() {
     let conn;
@@ -118,6 +118,18 @@ app.post("/api", (req, res) => {
   insertData();
 
   just_searched.push(searchTerm);
+  // Increment count for the channel or add new channel to popular array
+  if (channel !== undefined) {
+    const index = popular.findIndex(({ channel: name }) => name === channel);
+    console.log(index)
+    if (index === -1) {
+      popular.push({ channel: channel, count: 1 });
+    } else {
+      popular[index].count += 1;
+    }
+  }
+  // Sort the popular array in descending order of count
+  popular.sort((a, b) => b.count - a.count);
   // Return a response to the client
   res.json({
     message: "The POST request was processed successfully!",
@@ -133,34 +145,6 @@ app.post("/api", (req, res) => {
   });
   //searchResults.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
 });
-//Pull data for popular channels
-pool.getConnection()
-    .then(conn => {
-        conn.query('SELECT channel, COUNT(*) AS count FROM extension_searches GROUP BY channel')
-            .then((rows) => {
-                const channels = rows.map(({ channel, count }) => ({ channel, count }));
-
-                //HANDLING BIGINT RETUNRED FROM COUNT STATEMENT DATABASE USING MAP 
-                pop_seach.push(channels);
-                popular = pop_seach[0].map(obj => {
-                  return {
-                    channel: obj.channel,
-                    count: Number(obj.count)
-                  }
-                })
-                popular.sort((a, b) => b.count - a.count);
-                //console.log(popular);
-                conn.end();
-            })
-            .catch(err => {
-                console.log("An error occurred: " + err);
-                conn.end();
-            });
-    })
-    .catch(err => {
-        console.log("An error occurred: " + err);
-    });
-let returnUrl;
 
 // Set route to start OAuth link, this is where you define scopes to request
 app.get('/auth/twitch', function(req, res) {
@@ -201,18 +185,6 @@ app.get('/submit', (req, res) => {
 app.get('/about', (req, res) => {
   res.render('about');
 });
-app.get('/items/:id', (req, res) => {
-  const id = req.params.id;
-  item = results[0][id]
-
-  if (req.session && req.session.passport && req.session.passport.user) {
-    display_name = req.session.passport.user.data[0].display_name;
-    res.render('item', { display_name, item });
-  }else{
-    display_name = null;
-    res.render('item', { item });
-  }
-});
 app.get('/examples', (req, res) => {
   res.render('examples');
 });
@@ -227,18 +199,12 @@ app.post('/submit', (req, res) => {
     if(searchType == "searchTerm"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ? AND match_whole_word = 1', [search])
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ? AND match_whole_word = 1;', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
                 conn.end();
                 sendResults = results[0];
-                logs = sendResults[0].searchResults;
-                const regex = new RegExp(`\\b${search}\\b`, 'i');
-                const filteredMessages  = logs.filter((message) => {
-                  return regex.test(message.message_body);
-                });
-                console.log(filteredMessages)
                 if (req.session && req.session.passport && req.session.passport.user) {
                   display_name = req.session.passport.user.data[0].display_name;
                   res.render('results', { display_name, sendResults, search, searchType });
@@ -258,7 +224,7 @@ app.post('/submit', (req, res) => {
     } else if(searchType == "Channel"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE channel = ? AND match_whole_word = 1', [search])
+        conn.query('SELECT * FROM extension_searches WHERE channel = ? AND match_whole_word = 1;', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -283,7 +249,7 @@ app.post('/submit', (req, res) => {
     }else if(searchType == "User"){
       pool.getConnection()
       .then(conn => {
-          conn.query('SELECT * FROM extension_searches WHERE user = ? AND match_whole_word = 1', [search])
+          conn.query('SELECT * FROM extension_searches WHERE user = ? AND match_whole_word = 1;', [search])
               .then((rows) => {
                   //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                   results.push(rows);
@@ -310,7 +276,7 @@ app.post('/submit', (req, res) => {
     if(searchType == "searchTerm"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ? AND match_whole_word = 0', [search])
+        conn.query('SELECT * FROM extension_searches WHERE searchTerm = ?;', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -321,7 +287,7 @@ app.post('/submit', (req, res) => {
                   res.render('results', { display_name, sendResults, search, searchType });
                 }else{
                   display_name = null;
-                  res.render('results', { sendResults, search, searchType });
+                  res.render('results', { sendResults, search, searchType});
                 }
             })
             .catch(err => {
@@ -335,7 +301,7 @@ app.post('/submit', (req, res) => {
     } else if(searchType == "Channel"){
       pool.getConnection()
     .then(conn => {
-        conn.query('SELECT * FROM extension_searches WHERE channel = ? AND match_whole_word = 0', [search])
+        conn.query('SELECT * FROM extension_searches WHERE channel = ?;', [search])
             .then((rows) => {
                 //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                 results.push(rows);
@@ -360,7 +326,7 @@ app.post('/submit', (req, res) => {
     }else if(searchType == "User"){
       pool.getConnection()
       .then(conn => {
-          conn.query('SELECT * FROM extension_searches WHERE user = ? AND match_whole_word = 0', [search])
+          conn.query('SELECT * FROM extension_searches WHERE user = ?;', [search])
               .then((rows) => {
                   //const channels = rows.map(({ channel, count }) => ({ channel, count }));
                   results.push(rows);
@@ -387,7 +353,18 @@ app.post('/submit', (req, res) => {
 
   //results.forEach(res=> console.log('message: '+res.message_body, 'commenter: '+res.commenter_display_name, 'video timestamp: '+res.video_offset_link))
 });
-
+app.get('/items/:id', (req, res) => {
+  const id = req.params.id;
+  item = results[0][id]
+  console.log(item)
+  if (req.session && req.session.passport && req.session.passport.user) {
+    display_name = req.session.passport.user.data[0].display_name;
+    res.render('item', { display_name, item });
+  }else{
+    display_name = null;
+    res.render('item', { item });
+  }
+});
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

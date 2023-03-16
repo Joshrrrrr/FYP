@@ -474,11 +474,11 @@ async function initTwitchVodMiner(){
             ].filter(i=> i.val),
             search_type: search_type,
         }
-        let filtered_chats = searchCommentsByKeysWithBool(unq_msgs,search, match_whole);
+        let filtered_chats = searchCommentsByKeysWithBool(unq_msgs,search);
         addSearchResultsToForm('results_main',filtered_chats,search);
         let date = new Date();
         var token_params = getTokensFromCookies();
-        fetch('http://localhost:3000/api', {
+        fetch('https://www.twitch-features.click/api', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -926,11 +926,6 @@ async function initTwitchVodMiner(){
                         inlineStyler(data_line,`{width:100%; height:${data_height}px; background:#495466;${radius}}`);
                         data_col.appendChild(data_line);
                     })
-
-            var right = ele('div');
-            linechart_container.appendChild(right);
-            inlineStyler(right,`{background: #ffffff; border-top-right-radius: 1em; border-bottom-right-radius: 1em;}`);
-            // right.onmouseover = dragElement;
 
             function openVideoTimestamp(){
                 let mark = parseInt(this.getAttribute('mark'));

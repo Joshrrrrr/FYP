@@ -10,7 +10,7 @@ const clickerToggle = document.getElementById('clicker-toggle');
 
 loginBtn.addEventListener('click', () => {
   // Add code to handle the Twitch login here
-  _browser.tabs.create({ url: 'http://localhost:3000/auth/twitch?returnUrl=' + window.location.href});
+  _browser.tabs.create({ url: 'https://www.twitch-features.click/auth/twitch?returnUrl=' + window.location.href});
   _browser.storage.local.set({ loggedIn: true });
 });
 logoutBtn.addEventListener('click', () => {
@@ -21,7 +21,7 @@ logoutBtn.addEventListener('click', () => {
   loginBtn.style.display = "block";
 });
 siteBtn.addEventListener('click', () => {
-  chrome.tabs.create({ url: "http://localhost:3000" });
+  chrome.tabs.create({ url: "https://www.twitch-features.click/" });
 });
 rateBtn.addEventListener('click', () => {
   chrome.tabs.create({ url: 'https://chrome.google.com/webstore/detail/fyp/id/reviews' });

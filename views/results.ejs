@@ -74,10 +74,10 @@
         <ul>
           <% sendResults.forEach((result, index) => { %>
             <a href="/items/<%= index %>"><li>Channel: <%= result.channel %><br><br>
-            <p class="slice">Chatters: <% for(var i=0; i<result.searchResults.length; i++) { %>
-              <%= result.searchResults[i].commenter_display_name %>;
-            <% } %>
-            </p>
+              <p>Chatters: <% var results = JSON.parse(result.searchResults); 
+                for(var i=0; i<results.length; i++) { %>
+              <%= results[i].commenter_display_name %>
+            <% } %></p>
             <p style="color:#5b6980">
               <%= result.timestamp %>
             </p>

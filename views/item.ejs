@@ -47,16 +47,16 @@
           </tr>
         </thead>
         <tbody>
-          <% for(var i=0; i<item.searchResults.length; i++) { %>
+          <% var results = JSON.parse(item.searchResults);  for(var i=0; i<results.length; i++) { %>
             <tr>
               <td>
-                <a style="color:<%= item.searchResults[i].message_user_color %>"><%= item.searchResults[i].commenter_display_name %></a>
+                <a href="https://twitch.tv/<%= results[i].commenter_display_name %>" style="color:<%= results[i].message_user_color %>"><%= results[i].commenter_display_name %></a>
               </td>
               <td>
-                <%= item.searchResults[i].message_body %>
+                <%= results[i].message_body %>
               </td>
               <td>
-                <a href="<%= item.searchResults[i].video_offset_link %>"><%= item.searchResults[i].video_offset_link %></a>
+                <a href="<%= results[i].video_offset_link %>"><%= results[i].video_offset_link %></a>
               </td>
             </tr>
           <% } %>

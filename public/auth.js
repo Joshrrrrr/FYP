@@ -1,9 +1,4 @@
 const loginButton = document.getElementById('loginButton');
-console.log('button found');
-loginButton.addEventListener('click', () => {
-  console.log(window.location.href)
-  window.location.href = 'http://localhost:3000/auth/twitch?returnUrl=' + window.location.href;
-});
 const burgerMenu = document.querySelector('.burger-menu');
 const menuOptions = document.querySelector('.menu-options');
 const head = document.querySelector('.head');
@@ -19,6 +14,24 @@ const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]
 const matchWholeWordCheckbox = document.querySelectorAll('input[name="wholeWord"]');
 
 let searchTypeInput= 'searchTerm';
+
+if (loginButton) {
+  loginButton.addEventListener('click', () => {
+    window.location.href = 'https://www.twitch-features.click/auth/twitch?returnUrl=' + window.location.href;
+  });
+}
+// check if profile button exists
+const profileButton = document.getElementById('profileButton');
+if (profileButton) {
+  // create sign out option
+  const signOutOption = document.createElement('a');
+  signOutOption.classList.add('dropdown-item');
+  signOutOption.href = '/logout';
+  signOutOption.textContent = 'Sign Out';
+
+  // add sign out option to burger menu
+  menuOptions.appendChild(signOutOption);
+}
 
 // Add click event listener to each checkbox
 searchTypeCheckboxes.forEach(checkbox => {
