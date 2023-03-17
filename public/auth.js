@@ -12,6 +12,8 @@ const fltDropdownBtn = document.querySelector('.filter-button');
 const fltDropdownContent = document.querySelector('.filter-dropdown-content');
 const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]');
 const matchWholeWordCheckbox = document.querySelectorAll('input[name="wholeWord"]');
+const button = document.querySelector('.button');
+const profileButton = document.getElementById('profileButton');
 
 let searchTypeInput= 'searchTerm';
 
@@ -21,7 +23,6 @@ if (loginButton) {
   });
 }
 // check if profile button exists
-const profileButton = document.getElementById('profileButton');
 if (profileButton) {
   // create sign out option
   const signOutOption = document.createElement('a');
@@ -78,4 +79,14 @@ darkModeToggle.addEventListener('click', function() {
   });
   h4text1.classList.toggle('dark-mode');
   h4text2.classList.toggle('dark-mode');
+  itemsContainer.forEach((cont) => {
+    cont.classList.toggle('dark-mode');
+  })
+  button.classList.toggle('dark-mode');
+  if(loginButton){
+    loginButton.classList.toggle('dark-mode');
+  }else{
+    profileButton.classList.toggle('dark-mode');
+  }
+  burgerMenu.classList.toggle('dark-mode');
 });

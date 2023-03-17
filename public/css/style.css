@@ -98,6 +98,10 @@ input[type=checkbox]:checked {
   color: #b7c1d1;
   cursor: pointer;
 }
+.login-btn.dark-mode{
+  color: white;
+  background-color: #959595;
+}
 .prof-btn{
   margin-left: auto;
   font-size: 18px;
@@ -105,6 +109,10 @@ input[type=checkbox]:checked {
   border: none;
   background-color: #495466;
   color: #b7c1d1;
+}
+.prof-btn.dark-mode{
+  color: white;
+  background-color: #959595;
 }
 .burger-menu {
   order: 2;
@@ -114,6 +122,10 @@ input[type=checkbox]:checked {
   background-color: #495466;
   color: #b7c1d1;
   cursor: pointer;
+}
+.burger-menu.dark-mode{
+  color: white;
+  background-color: #959595;
 }
 .menu-options {
   text-align: center;
@@ -175,6 +187,7 @@ ul{
   text-align: left;
 }
 .items-container {
+  background-color: #242931;
   line-height: 2;
   border-radius: 2px;
   display: flex;
@@ -182,6 +195,9 @@ ul{
   justify-content: left;
   margin: 0px 0;
   text-align: left;
+}
+.items-container.dark-mode{
+  background-color: #959595;
 }
 .search-bar {
   box-shadow: 0px 11px 15px rgba(0, 0, 0, 0.3);
@@ -259,6 +275,9 @@ a{
   text-align: center;
   text-decoration: none;
   transition: all 0.3s ease;
+}
+.button.dark-mode{
+  background-color: #959595;
 }
 .filter-button {
   border-radius: 8px;
@@ -352,7 +371,6 @@ a{
   text-align: left;
   width: 300px;
   color:white;
-  background-color: #242931;
   padding: 20px;
   text-align: center;
   margin: 0 10px;
