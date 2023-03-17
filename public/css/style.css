@@ -552,3 +552,12 @@ td {
   background-color: lightgray;
   cursor: not-allowed;
 }
+
+img.github {
+  width:96px;
+  height: 54px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
