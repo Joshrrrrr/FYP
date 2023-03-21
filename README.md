@@ -1,6 +1,6 @@
 # README
 
-## Extension(./extension)
+## [Extension](./extension)
 
 - `extension`: A folder containing the code for a browser extension.
 
@@ -12,7 +12,7 @@ To use the browser extension, follow these steps:
 4. Click on the "Load unpacked" button.
 5. Select the `/extension` folder from your cloned repository.
 
-## Webpage
+## [Webpage]
 
 - `public`: A folder containing files that will be publicly accessible on the web server.
 - `views`: A folder containing HTML templates for the web server.
