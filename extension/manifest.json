@@ -12,6 +12,9 @@
       "background" : {
         "service_worker" : "background.js"
       },
+      "permissions": [
+        "storage"
+      ],
       "host_permissions":[
         "https://gql.twitch.tv/gql",
         "https://api.twitch.tv/*"

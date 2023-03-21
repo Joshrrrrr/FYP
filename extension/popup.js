@@ -24,7 +24,7 @@ siteBtn.addEventListener('click', () => {
   chrome.tabs.create({ url: "https://www.twitch-features.click/" });
 });
 rateBtn.addEventListener('click', () => {
-  chrome.tabs.create({ url: 'https://chrome.google.com/webstore/detail/fyp/id/reviews' });
+  chrome.tabs.create({ url: 'https://chrome.google.com/webstore/detail/twitch-features/coafbcmondefhgpmfmojieehnbhnadjk' });
 });
 // When the tab is closed and the popup is reopened, retrieve the state from storage
 _browser.storage.local.get('loggedIn', function(data) {

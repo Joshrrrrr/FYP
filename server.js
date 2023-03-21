@@ -27,6 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use('/',express.static('public'));
 
 app.set('view engine', 'ejs');
 
@@ -175,7 +176,6 @@ app.get('/', (req, res) => {
     res.render('auth', { just_searched, popular} );
   }
 });
-app.use('/',express.static('public'));
 
 app.get('/submit', (req, res) => {
   res.render('auth', { just_searched, popular} );
