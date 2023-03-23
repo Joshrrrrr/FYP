@@ -159,13 +159,13 @@ app.get('/auth/twitch/callback', function(req, res) {
 });
 
 app.get('/', (req, res) => {
-  if(returnUrl && returnUrl.startsWith('chrome-extension://')) {
+  if(returnUrl.startsWith('chrome-extension://')) {
+    returnUrl ="";
     //const user = req.session.passport.user.data[0].display_name;
     //const extensionId = 'kdilkflgpbfiemlmdgljafkckifnojbl';
     //const url = `chrome-extension://${extensionId}/popup.html?id=${user}`;
     res.send("<script>window.close();</script >")
-  }
-  if(req.session && req.session.passport && req.session.passport.user) {
+  }else if(req.session && req.session.passport && req.session.passport.user) {
     display_name = req.session.passport.user.data[0].display_name;
     access_token = req.session.passport.user.accessToken;
     refresh_token = req.session.passport.user.refreshToken;
@@ -177,9 +177,6 @@ app.get('/', (req, res) => {
   }
 });
 
-app.get('/submit', (req, res) => {
-  res.render('auth', { just_searched, popular} );
-});
 app.get('/about', (req, res) => {
   res.render('about');
 });
