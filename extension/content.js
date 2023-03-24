@@ -598,22 +598,26 @@ async function initTwitchVodMiner(){
                 token_params = {...token_params,...{video_id:stream_video_id}};
             }
             //console.log(token_params)
-            let vod_info = await requestFromBackground({cmd: 'vodInfo', token_params: token_params});
+            let vod_info = await requestFromBackground({cmd: 'vodInfo',
+             token_params: token_params});
             const timeArr = vod_info.duration.split(/[hms]/).filter(str => str !== '');
             const hours = parseInt(timeArr[0], 10) || 0;
             const minutes = parseInt(timeArr[1], 10) || 0;
             const seconds = parseInt(timeArr[2], 10) || 0;
             const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 
-            let first_comments = await requestFromBackground({cmd: 'vodChatExtractionAPI',  token_params: token_params, cursor: ''});
+            let first_comments = await requestFromBackground({cmd: 'vodChatExtractionAPI',
+             token_params: token_params, cursor: ''});
             let comments = parseVODchatComments(first_comments,token_params?.video_id);
             contain_arr.push(comments);
             // console.log(comments)
-            updateDownloadBar({text:'',img:'',iteration:contain_arr.flat()?.[contain_arr.flat().length-1]?.content_offset_seconds,total_results:totalSeconds,status:true});
-            var next_cursor = first_comments?.[0]?.data?.video?.comments?.edges?.length ? first_comments?.[0]?.data?.video?.comments?.edges?.at(-1).cursor : null;
+            updateDownloadBar({text:'',img:'',iteration:contain_arr.flat()?.[contain_arr.flat().length-1]
+            ?.content_offset_seconds,total_results:totalSeconds,status:true});
+                
+            var next_cursor = first_comments?.[0]?.data?.video?.comments?.edges?.length ?
+             first_comments?.[0]?.data?.video?.comments?.edges?.at(-1).cursor : null;
+             
             for(let i=0; i<999000; i++){//
-                // console.log(next_cursor);
-                // console.log(unqKey(contain_arr.flat(),'content_id'))
                 let res2 = await requestFromBackground({cmd: 'vodChatExtractionAPI',  token_params: token_params, cursor:next_cursor});
                 // await delay(rando(333))
                 next_cursor = res2?.[0]?.data?.video?.comments?.edges?.length ? res2?.[0]?.data?.video?.comments?.edges?.at(-1).cursor : null;

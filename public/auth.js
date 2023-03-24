@@ -14,6 +14,7 @@ const searchTypeCheckboxes = document.querySelectorAll('input[name="searchType"]
 const matchWholeWordCheckbox = document.querySelectorAll('input[name="wholeWord"]');
 const button = document.querySelector('.button');
 const profileButton = document.getElementById('profileButton');
+const closeButton = document.querySelector('.close-btn');
 
 let searchTypeInput= 'searchTerm';
 
@@ -59,6 +60,9 @@ itemsContainer.forEach(container => {
 fltDropdownBtn.addEventListener('click', function() {
   // Toggle the 'show' class on the dropdown content
   fltDropdownContent.classList.toggle('show');
+});
+closeButton.addEventListener('click', function() {
+  fltDropdownContent.classList.remove('show');
 });
 // Add click event listener to dropdown button
 dropdownBtn.addEventListener('click', function() {

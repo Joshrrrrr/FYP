@@ -38,7 +38,10 @@ async function vodChatExtractionAPI(params,cursor){
     },
     "referrer": "https://www.twitch.tv/",
     "referrerPolicy": "strict-origin-when-cross-origin",
-    "body": `[{\"operationName\":\"VideoCommentsByOffsetOrCursor\",\"variables\":{\"videoID\":\"${video_id}\",${cursor ? '\"cursor\":\"'+cursor+'\"' : '\"contentOffsetSeconds\":0'}},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"b70a3591ff0f4e0313d126c6a1502d79a1c02baebb288227c582044aa76adf6a\"}}}]`,
+    "body": `[{\"operationName\":\"VideoCommentsByOffsetOrCursor\",\"variables\":
+        {\"videoID\":\"${video_id}\",${cursor ? '\"cursor\":\"'+cursor+'\"' : '\"contentOffsetSeconds\":0'}},
+        \"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":
+        \"b70a3591ff0f4e0313d126c6a1502d79a1c02baebb288227c582044aa76adf6a\"}}}]`,
     "method": "POST",
     "mode": "cors",
     "credentials": "include"

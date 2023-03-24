@@ -159,7 +159,7 @@ app.get('/auth/twitch/callback', function(req, res) {
 });
 
 app.get('/', (req, res) => {
-  if(returnUrl.startsWith('chrome-extension://')) {
+  if(returnUrl && returnUrl.startsWith('chrome-extension://')) {
     returnUrl ="";
     //const user = req.session.passport.user.data[0].display_name;
     //const extensionId = 'kdilkflgpbfiemlmdgljafkckifnojbl';
