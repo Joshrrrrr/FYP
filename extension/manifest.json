@@ -1,6 +1,6 @@
 {
       "manifest_version": 3,
-      "name": "Twitch Features",
+      "name": "SearchTTV - features for Twitch",
       "version": "2",
       "description": "Search Twitch chat logs",
       "content_scripts": [
