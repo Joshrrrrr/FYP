@@ -279,6 +279,14 @@ a{
   width: 480px; /* Set the width of the div */
   margin-left: 200px; /* Set the left margin to half of the width */
 }
+.info-div2{
+  position: absolute;
+  top: 630px;
+  right: 50%;
+  transform: translate(-50%, -50%);
+  width: 510px; /* Set the width of the div */
+  margin-right: 0px; /* Set the left margin to half of the width */
+}
 .link-text{
   color: #d1d5da;
 }
@@ -296,8 +304,20 @@ a{
   justify-content: flex-end;
   align-items: right;
 }
+.container-right2 {
+  width: 70%;
+  margin-left: 400px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: right;
+}
 .container img {
   max-width: 50%;
+}
+.container-right2 img {
+  max-width: 60%;
+  width: 1000px;
+  height: 720px;
 }
 .button {
   border-radius: 8px;

@@ -918,7 +918,7 @@ async function initTwitchVodMiner(){
             });
         }
 
-        function buildTimelineAnalysis(records,key,rounder){ /* rounded down to the nearest 10 seconds */
+        function buildTimelineAnalysis(records,key,rounder){ // rounded down to the nearest 10 seconds
 
             // Add more detailed comments to this code to describe each step:
             // 1. Add a new property to each record that has the timestamp rounded to the nearest minute
